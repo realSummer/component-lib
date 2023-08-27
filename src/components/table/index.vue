@@ -2,16 +2,29 @@
 	<div class="index">
 
 		<comLibFrom @handleEventChange="onHandleEventChange" :formConfig="comLibFromConfig"></comLibFrom>
+		<comLibTable
+				:table-config="comLibTableConfig"
+				:request-fun="requestFun"
+				@onHandleSizeChange="onHandleSizeChange"
+				@onHandleCurrentChange="onHandleCurrentChange"
+				@onHandleSelectionChange="onHandleSelectionChange"
+				@onOperateBtn="onHandleOperateBtn"
+				@onHandleSortChange="onHandleSortChange"
+				@onRowClick="onHandleRowClick"
+		></comLibTable>
 
 	</div>
 </template>
 
 <script>
-import comLibFrom from './lib-from/comLib-from.vue'
+import comLibFrom from './lib-from/comLib-from'
+
+import comLibTable from './lib-table/comLib-table'
 
 export default {
 	components:{
-		comLibFrom
+		comLibFrom,
+		comLibTable
 	},
 	data(){
 		return {
@@ -383,9 +396,83 @@ export default {
 				},
 			],
 
+			comLibTableConfig : {
+				hasSelect: true, // 有无选中列
+				hasOperation: true, // 有无操作列
+				border: false, // 是否带有纵向边框 默认为false
+				hasExpand: true, // 有无展开行功能 默认为false
+				rowClick: false, //是否开启行点击 默认为false
+				expands: [], // 开启行展开之后的数据
+				columns: [  //自定义列 是一个数组 数组每一项代表一列
+					{
+						id: "1",  //唯一标识
+						label: "状态",  //列名
+						prop: "analysisStatus",  //列对应的后台字段名 和自定义列slot对应
+						width: "320",  //列宽
+						className: "", //只自定义class类
+						minWidth: "100", //最小宽度
+						show: "template",  //true 代表不做任何处理 false代表隐藏 template代表自定义模板
+						sortable: "custom",  //排序统一采用后台控制 custom代表后台排序  默认不排序
+						// formatData: formatAddTime,  //代表数据格式化 类似于filter过滤器功能  默认为null
+						showHeader: true,  //代表是否自定义表头  默认为false
+						headerProp: "stateHeader"  //自定义表头slot  name值 需要showHeader配置为true
+					},
+					{
+						id: "2",  //唯一标识
+						label: "行为",  //列名
+						prop: "analysi",  //列对应的后台字段名 和自定义列slot对应
+						width: "320",  //列宽
+						className: "", //只自定义class类
+						minWidth: "100", //最小宽度
+						show: "template",  //true 代表不做任何处理 false代表隐藏 template代表自定义模板
+						sortable: "custom",  //排序统一采用后台控制 custom代表后台排序  默认不排序
+						// formatData: formatAddTime,  //代表数据格式化 类似于filter过滤器功能  默认为null
+						showHeader: true,  //代表是否自定义表头  默认为false
+						headerProp: "stateHeader"  //自定义表头slot  name值 需要showHeader配置为true
+					}
+				],
+				operation: {
+					// 操作功能
+					label: "操作", // 操作列的表头文字
+					width: "200", // 操作列的宽度
+					className: "", // 操作列的class名
+					data: [
+						// 操作列数据
+						{
+							id: 1, // 按钮循环组件的key值
+							label: "保存", // 按钮文字
+							Fun: "handleSubmit", // 点击按钮后触发的父组件事件
+							size: "mini", // 按钮大小
+							classname: "", // 按钮的类名
+							type: "success" //可选的有primary / success / warning / danger / info / text
+						}
+					]
+				},
+				//  搜索参数代表是什么形式传给后台  默认是params  但是post请求下可以配置data
+				searchProp: {
+					//   name:'data'
+				},
+				//  格式化数据一定要返回一个对象  代表数据和数量
+				formatTableData: ({data}) => {
+					return {
+						data: data.apkAnalysis,
+						totalCount: data.counts
+					};
+				}
+			},
+
+
 		}
 	},
 	methods: {
+
+		// 列表请求配置 返回一个promise
+		requestFun() {
+			return new Promise().then(res=>{
+				console.log(res)
+			})
+		},
+
 
 		// 表单变化事件监听
 		onHandleEventChange(val) {

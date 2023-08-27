@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<component v-for="item in formConfig" :key="item.id" v-bind:is="item.type" v-on="$listeners" :configData="item"></component>
+	<div style="display: flex; flex-wrap: wrap; align-items: center">
+		<component v-for="item in formConfig" :key="item.id" v-bind:is="item.type" v-on="$listeners" :configData="item" style="padding-right: 20px"></component>
 		<slot></slot>
 	</div>
 </template>
